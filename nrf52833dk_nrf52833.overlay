@@ -17,7 +17,7 @@
     nau7802: nau7802@2a {
         compatible = "nuvoton,nau7802";
         reg = <0x2a>;
-        drdy-gpios = <&gpio0 25 GPIO_ACTIVE_HIGH>;
+        drdy-gpios = <&gpio0 28 GPIO_ACTIVE_HIGH>;
         conversions-per-second = <320>; //SPS (Tốc độ lấy mẫu ADC: 320 mẫu / giây (320 SPS))
         gain = <128>;
     };
