@@ -5,7 +5,7 @@
 #include <zephyr/logging/log.h>
 #include <zephyr/device.h>
 /* this is for getting the SENSOR_CHAN_FORCE*/
-// #include "../drivers/sensor/nau7802/nau7802.h"
+#include "../drivers/sensor/nau7802/nau7802.h"
 
 LOG_MODULE_REGISTER(main_logging);
 
