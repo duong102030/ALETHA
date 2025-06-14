@@ -8,6 +8,7 @@ LOG_MODULE_REGISTER(loadcell, CONFIG_LOG_DEFAULT_LEVEL);
 
 static const struct device *nau7802_dev;
 static float offset_grams = 0.0f;
+static float scale_factor = 0.1f; // Hệ số ban đầu, sẽ được hiệu chỉnh
 
 int loadcell_init(const struct device *dev) {
     if (!device_is_ready(dev)) {
@@ -17,7 +18,7 @@ int loadcell_init(const struct device *dev) {
     nau7802_dev = dev;
     LOG_INF("Loadcell initializing...");
 
-    // Lấy offset khi không có lực
+    // Hiệu chỉnh zero (không có lực)
     float temp_grams;
     for (int i = 0; i < 10; i++) {
         loadcell_read_grams(&temp_grams);
@@ -26,6 +27,23 @@ int loadcell_init(const struct device *dev) {
     }
     offset_grams /= 10.0f;
     LOG_INF("Offset calibrated: %.2f g", offset_grams);
+    return 0;
+}
+
+int loadcell_calibrate_span(float known_weight) {
+    struct sensor_value val;
+    float raw_value = 0.0f;
+    for (int i = 0; i < 10; i++) {
+        sensor_sample_fetch(nau7802_dev);
+        sensor_channel_get(nau7802_dev, SENSOR_CHAN_FORCE, &val);
+        raw_value += sensor_value_to_double(&val);
+        k_sleep(K_MSEC(100));
+    }
+    raw_value /= 10.0f;
+
+    // Tính hệ số chuyển đổi dựa trên trọng lượng tham chiếu
+    scale_factor = (raw_value - sensor_value_to_double(&val) * offset_grams) / known_weight;
+    LOG_INF("Span calibrated, scale factor: %.6f", scale_factor);
     return 0;
 }
 
@@ -43,13 +61,12 @@ int loadcell_read_grams(float *grams) {
         return ret;
     }
 
-    // Chuyển đổi giá trị sensor sang gram (giả sử 1 đơn vị force = 0.1g, cần hiệu chỉnh thực tế)
-    float force_grams = sensor_value_to_double(&val) * 0.1f;
-    if (force_grams < 0) {
-        force_grams = 0.0f;
+    float raw_grams = (sensor_value_to_double(&val) - offset_grams) / scale_factor;
+    if (raw_grams < 0) {
+        raw_grams = 0.0f;
     }
 
-    *grams = force_grams;
-    LOG_INF("Weight: %.2f g", force_grams);
+    *grams = raw_grams;
+    LOG_INF("Weight: %.2f g", raw_grams);
     return 0;
 }
