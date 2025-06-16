@@ -2,7 +2,6 @@
 #define LOADCELL_H
 
 #include <zephyr/kernel.h>
-#include <zephyr/drivers/sensor.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -13,6 +12,9 @@ typedef struct {
 	float weight;
 	float accel_mag;
 } sensors_t;
+
+/* Global sensor data */
+extern sensors_t sensors;
 
 // int loadcell_init(const struct device *dev);
 // int loadcell_read_grams(float *grams);
