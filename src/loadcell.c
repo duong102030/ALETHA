@@ -27,6 +27,11 @@ int initialize_load_cell(void)
 
 	LOG_INF("NAU7802: Calculating tare...");
 
+    int ret = nau7802_tare(nau7802, 10);
+    if (ret == -EIO || ret == -ENODEV) {
+    LOG_ERR("NAU7802 tare failed: %d", ret);
+    return ret;
+    }
 	LOG_INF("NAU7802 succesfully initialized");
 	return 0;
 }

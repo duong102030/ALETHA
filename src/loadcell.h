@@ -34,7 +34,7 @@ int initialize_load_cell(void);
  * @retval The calculated zero offset value on success
  * @retval negative error code on failure
  */
-int nau7802_tare(const struct device *dev, uint8_t readings)
+int nau7802_tare(const struct device *dev, uint8_t readings);
 
 #ifdef __cplusplus
 }
