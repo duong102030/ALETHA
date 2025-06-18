@@ -7,6 +7,7 @@
 LOG_MODULE_REGISTER(loadcell, CONFIG_LOG_DEFAULT_LEVEL);
 
 static const struct device *const nau7802 = DEVICE_DT_GET_ONE(nuvoton_nau7802);
+
 static int32_t zero_offset = 0;
 
 int initialize_load_cell(void)
@@ -26,6 +27,49 @@ int initialize_load_cell(void)
 
 	LOG_INF("NAU7802: Calculating tare...");
 
+    int ret = nau7802_tare(nau7802, 10);
+    if (ret == -EIO || ret == -ENODEV) {
+    LOG_ERR("NAU7802 tare failed: %d", ret);
+    return ret;
+    }
 	LOG_INF("NAU7802 succesfully initialized");
 	return 0;
 }
+
+int nau7802_tare(const struct device *dev, uint8_t readings)
+{
+    int64_t avg = 0;
+    struct sensor_value val;
+
+    if (readings == 0) {
+        readings = 1;
+    }
+
+    for (int i = 0; i < readings; i++) {
+        //Fetch a sample from the sensor
+        int ret = sensor_sample_fetch(dev);
+        if (ret) {
+            LOG_ERR("Failed to fetch sensor sample at %d", i);
+            return ret;
+        }
+
+        //Get a reading from a sensor device
+        ret = sensor_channel_get(dev, SENSOR_CHAN_FORCE, &val);
+        if (ret) {
+            LOG_ERR("Failed to get sensor value at %d", i);
+            return ret;
+        }
+
+        avg += val.val1;
+        k_msleep(10); // sleep to stabilize ADC
+    }
+
+    //Calculate the average value: sum of values ​​divided by number of readings
+    zero_offset = avg / readings;
+    LOG_INF("Tare complete, zero offset: %d", zero_offset);
+
+    return zero_offset;
+}
+
+
+
