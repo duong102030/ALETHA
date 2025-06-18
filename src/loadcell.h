@@ -36,6 +36,13 @@ int initialize_load_cell(void);
  */
 int nau7802_tare(const struct device *dev, uint8_t readings);
 
+/**
+ * @brief Get the current load cell value after offset correction.
+ *
+ * @retval The digital reading (zeroed) from load cell.
+ */
+int32_t nau7802_measure(void);
+
 #ifdef __cplusplus
 }
 #endif

@@ -17,5 +17,12 @@ int main(void)
         LOG_ERR("Loadcell init failed: %d", ret);
         return;
     }
+
+    while (1) {
+        int32_t value = nau7802_measure();
+        LOG_INF("Loadcell digital value (zeroed): %d\n", value);
+        k_msleep(1000);
+    }
+
     return 0;
 }

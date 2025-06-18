@@ -71,5 +71,23 @@ int nau7802_tare(const struct device *dev, uint8_t readings)
     return zero_offset;
 }
 
+int32_t nau7802_measure(void)
+{
+    struct sensor_value val;
 
+    //Fetch a sample from the sensor
+    int ret = sensor_sample_fetch(nau7802);
+    if (ret) {
+        LOG_ERR("Failed to fetch sensor sample");
+        return 0;
+    }
+
+    //Get a reading from a sensor device
+    ret = sensor_channel_get(nau7802, SENSOR_CHAN_FORCE, &val);
+    if (ret) {
+        LOG_ERR("Failed to get sensor value");
+        return 0;
+    }
+    return val.val1;
+}
 
