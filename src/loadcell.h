@@ -8,8 +8,7 @@
 extern "C" {
 #endif
 
-int loadcell_init(const struct device *dev);
-int loadcell_read_grams(float *grams);
+int initialize_load_cell(void);
 
 #ifdef __cplusplus
 }
