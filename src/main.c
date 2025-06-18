@@ -19,8 +19,8 @@ int main(void)
     }
 
     while (1) {
-        int32_t value = nau7802_measure();
-        LOG_INF("Loadcell digital value (zeroed): %d\n", value);
+        int32_t value = sensors_read_load_cell();
+        LOG_INF("Loadcell digital value (zeroed): %d g\n", value);
         k_msleep(1000);
     }
 

@@ -43,6 +43,8 @@ int nau7802_tare(const struct device *dev, uint8_t readings);
  */
 int32_t nau7802_measure(void);
 
+int32_t sensors_read_load_cell(void);
+
 #ifdef __cplusplus
 }
 #endif

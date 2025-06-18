@@ -91,3 +91,12 @@ int32_t nau7802_measure(void)
     return val.val1;
 }
 
+int32_t sensors_read_load_cell(void)
+{
+	int32_t loadcell_value = nau7802_measure();
+    // If the reading is negative (due to noise/error), consider it as 0:
+    if (loadcell_value < 0.0f) {
+        loadcell_value = 0.0f;
+    }
+    return loadcell_value;
+}
