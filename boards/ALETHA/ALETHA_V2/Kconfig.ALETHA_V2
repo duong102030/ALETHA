@@ -1,0 +1,2 @@
+config BOARD_ALETHA_V2
+	select SOC_NRF52833_QIAA

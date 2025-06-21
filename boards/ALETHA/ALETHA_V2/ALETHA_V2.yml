@@ -1,0 +1,10 @@
+identifier: ALETHA_V2/nrf52833
+name: ALETHA
+vendor: ALETHA
+type: mcu
+arch: arm
+ram: 128
+flash: 512
+toolchain:
+  - zephyr
+supported: []

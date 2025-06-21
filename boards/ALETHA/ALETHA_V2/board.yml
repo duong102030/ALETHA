@@ -1,0 +1,5 @@
+board:
+  name: ALETHA_V2
+  vendor: ALETHA
+  socs:
+    - name: nrf52833
