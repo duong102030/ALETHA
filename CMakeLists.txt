@@ -10,6 +10,6 @@ target_sources(app PRIVATE
                 src/main.c
                 src/loadcell.c)
 
-zephyr_library_include_directories(.)
+# zephyr_library_include_directories(.)
 
-include_directories(${CMAKE_SOURCE_DIR}/src)
+# include_directories(${CMAKE_SOURCE_DIR}/src)
