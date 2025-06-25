@@ -45,6 +45,8 @@ int32_t nau7802_measure(void);
 
 int32_t sensors_read_load_cell(void);
 
+void sensors_calibration(float known_weight_gram);
+
 #ifdef __cplusplus
 }
 #endif
