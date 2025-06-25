@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "nau7802.h": "c"
+        "nau7802.h": "c",
+        "log.h": "c"
     }
 }

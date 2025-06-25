@@ -18,9 +18,19 @@ int main(void)
         return;
     }
 
+    // LOG_INF("== PLACE CALIBRATION WEIGHT (e.g. 196g) ON THE LOADCELL ==");
+    // k_sleep(K_SECONDS(5)); // Đợi đặt vật chuẩn
+
+    // sensors_calibration(196.0f);
+
+    LOG_INF("== Calibration done. Now measuring weight ==");
+    k_sleep(K_MSEC(500));
+
     while (1) {
-        int32_t value = sensors_read_load_cell();
-        LOG_INF("Loadcell digital value (zeroed): %d g\n", value);
+        // int32_t value = sensors_read_load_cell();
+        // LOG_INF("Loadcell digital value (zeroed): %d g\n", value);
+        float weight = sensors_read_weight();
+        LOG_INF("Loadcell measured: %.2f gram", weight);
         k_msleep(1000);
     }
 

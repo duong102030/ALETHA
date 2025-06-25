@@ -10,7 +10,9 @@ static const struct device *const nau7802 = DEVICE_DT_GET_ONE(nuvoton_nau7802);
 
 static int32_t zero_offset = 0;
 
-static float calibration_factor = 1.0f; // Đơn vị: số count/gram (sau khi calibration)
+// static float calibration_factor = 1.0f; // Đơn vị: số count/gram (sau khi calibration)
+
+static const float calibration_factor = KNOWN_DELTA_DIGITAL / KNOWN_WEIGHT_GRAM;
 
 int initialize_load_cell(void)
 {
@@ -103,14 +105,33 @@ int32_t sensors_read_load_cell(void)
     return loadcell_value;
 }
 
-void sensors_calibration(float known_weight_gram)
+/**
+ * Calibration: đặt vật chuẩn lên, nhập trọng lượng (gram),
+ * tính calibration_factor (số count/gram).
+ */
+
+// void sensors_calibration(float known_weight_gram)
+// {
+//     int32_t reading_with_weight = nau7802_measure();
+//     int32_t delta = reading_with_weight - zero_offset;
+//     if (known_weight_gram > 0.0f && delta != 0) {
+//         calibration_factor = (float)delta / known_weight_gram;
+//         LOG_INF("Calibration done! calibration_factor = %f (count/gram)", calibration_factor);
+//     } else {
+//         LOG_ERR("Calibration failed! Check weight and sensor readings.");
+//     }
+// }
+
+/**
+ * Đọc trọng lượng sau khi đã calibration, trả về đơn vị gram.
+ */
+
+float sensors_read_weight(void)
 {
-    int32_t reading_with_weight = nau7802_measure();
-    int32_t delta = reading_with_weight - zero_offset;
-    if (known_weight_gram > 0.0f && delta != 0) {
-        calibration_factor = (float)delta / known_weight_gram;
-        LOG_INF("Calibration done! calibration_factor = %f (count/gram)", calibration_factor);
-    } else {
-        LOG_ERR("Calibration failed! Check weight and sensor readings.");
+    int32_t reading = nau7802_measure();
+    float weight = (reading - zero_offset) / calibration_factor;
+    if (weight < 0.0f) {
+        weight = 0.0f;
     }
+    return weight;
 }

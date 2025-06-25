@@ -8,6 +8,9 @@
 extern "C" {
 #endif
 
+#define KNOWN_WEIGHT_GRAM    196.0f
+#define KNOWN_DELTA_DIGITAL  15300.0f
+
 /**
  * @brief Initialize the NAU7802 load cell sensor.
  *
@@ -46,6 +49,8 @@ int32_t nau7802_measure(void);
 int32_t sensors_read_load_cell(void);
 
 void sensors_calibration(float known_weight_gram);
+
+float sensors_read_weight(void);
 
 #ifdef __cplusplus
 }
