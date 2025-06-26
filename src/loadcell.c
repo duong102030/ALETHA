@@ -92,7 +92,8 @@ int32_t nau7802_measure(void)
     //Get a reading from a sensor device
     ret = sensor_channel_get(nau7802, SENSOR_CHAN_FORCE, &val);
     if (ret) {
-        LOG_ERR("Failed to get sensor value");
+        // LOG_ERR("Failed to get sensor value");
+        LOG_ERR("Failed to get sensor value, ret = %d", ret);
         return 0;
     }
     return val.val1;
