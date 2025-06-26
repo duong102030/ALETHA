@@ -10,9 +10,8 @@ static const struct device *const nau7802 = DEVICE_DT_GET_ONE(nuvoton_nau7802);
 
 static int32_t zero_offset = 0;
 
-// static float calibration_factor = 1.0f; // Đơn vị: số count/gram (sau khi calibration)
-
-static const float calibration_factor = KNOWN_DELTA_DIGITAL / KNOWN_WEIGHT_GRAM;
+static float calibration_factor = 1.0f;
+// static const float calibration_factor = KNOWN_DELTA_DIGITAL / KNOWN_WEIGHT_GRAM;
 
 int initialize_load_cell(void)
 {
@@ -36,6 +35,10 @@ int initialize_load_cell(void)
     LOG_ERR("NAU7802 tare failed: %d", ret);
     return ret;
     }
+
+    calibration_factor = (KNOWN_DIGITAL_READING_WEIGHT - zero_offset) / KNOWN_WEIGHT_GRAM;
+    LOG_INF("Calibration factor updated: %f (count/gram)", calibration_factor);
+
 	LOG_INF("NAU7802 succesfully initialized");
 	return 0;
 }
@@ -129,8 +132,13 @@ int32_t sensors_read_load_cell(void)
 float sensors_read_weight(void)
 {
     int32_t reading = nau7802_measure();
+
+    LOG_INF("Reading digital: %d", reading);
+    LOG_INF("Zero offset: %d", zero_offset);
+    LOG_INF("Calibration weight: %.2f", calibration_factor);
+
     float weight = (reading - zero_offset) / calibration_factor;
-    if (weight < 0.0f) {
+    if (weight < 0.0f || reading <= 0.0f) {
         weight = 0.0f;
     }
     return weight;

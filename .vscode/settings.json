@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "nau7802.h": "c",
-        "log.h": "c"
+        "log.h": "c",
+        "kernel.h": "c",
+        "sensor.h": "c"
     }
 }

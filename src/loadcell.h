@@ -9,7 +9,7 @@ extern "C" {
 #endif
 
 #define KNOWN_WEIGHT_GRAM    196.0f
-#define KNOWN_DELTA_DIGITAL  15300.0f
+#define KNOWN_DIGITAL_READING_WEIGHT  15000.0f
 
 /**
  * @brief Initialize the NAU7802 load cell sensor.
